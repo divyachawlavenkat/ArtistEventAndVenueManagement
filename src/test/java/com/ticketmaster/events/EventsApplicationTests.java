@@ -8,6 +8,7 @@ class EventsApplicationTests {
 
 	@Test
 	void contextLoads() {
+		EventsApplication.main(new String[]{});
 	}
 
 }

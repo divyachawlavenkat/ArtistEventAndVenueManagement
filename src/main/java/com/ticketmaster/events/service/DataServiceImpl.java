@@ -11,8 +11,16 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+/**
+ *  data service implementation
+ * @author divyavenkatesh
+ * @date 20/04/2023
+ *
+ */
 @Service
 public class DataServiceImpl implements DataService {
     private final String eventsEndpoint = "https://iccp-interview-data.s3-eu-west-1.amazonaws.com/78656681/events.json";
@@ -20,7 +28,12 @@ public class DataServiceImpl implements DataService {
     private final String venuesEndpoint = "https://iccp-interview-data.s3-eu-west-1.amazonaws.com/78656681/venues.json";
 
 
-
+    /**
+     * Get all artists data from S3
+     *
+     * @author Divya Venkatesh
+     * @date 21/03/2023
+     */
     @Override
     public List<Artist> getAllArtists() throws Exception {
         // Use HttpClient to fetch data from artistsEndpoint and convert to List<Artist>
@@ -38,6 +51,12 @@ public class DataServiceImpl implements DataService {
         return artists;
     }
 
+    /**
+     * Get all events data from S3
+     *
+     * @author Divya Venkatesh
+     * @date 21/03/2023
+     */
     @Override
     public List<Event> getAllEvents() throws Exception{
         // Use HttpClient to fetch data from eventsEndpoint and convert to List<Event>
@@ -55,6 +74,12 @@ public class DataServiceImpl implements DataService {
         return events;
     }
 
+    /**
+     * Get all venues data from S3
+     *
+     * @author Divya Venkatesh
+     * @date 21/03/2023
+     */
     @Override
     public List<Venue> getAllVenues() throws Exception{
         // Use HttpClient to fetch data from venuesEndpoint and convert to List<Venue>
@@ -70,6 +95,38 @@ public class DataServiceImpl implements DataService {
         List<Venue> venues = objectMapper.readValue(response.body(), new TypeReference<>() {});
 
         return venues;
+    }
+
+    /**
+     * Get Artist data by artistId
+     *
+     * @author Divya Venkatesh
+     * @date 21/03/2023
+     */
+    @Override
+    public Optional<Artist> getArtist(String artistId) throws Exception {
+        // find artist by id
+        Optional<Artist> artist = getAllArtists().stream()
+                .filter(a -> a.getId().equals(artistId))
+                .findFirst();
+        return artist;
+    }
+
+    /**
+     * Get Events data for specific artistId
+     *
+     * @author Divya Venkatesh
+     * @date 21/03/2023
+     */
+    @Override
+    public List<Event> getEventsForArtist(String artistId) throws Exception {
+        List<Event> eventsByArtist = new ArrayList<>();
+        // get events for the artist
+        getAllEvents().stream()
+                .filter(event -> event.getArtists().stream()
+                        .anyMatch(art -> art.getId().equals(artistId)))
+                .forEach(eventsByArtist::add);
+        return eventsByArtist;
     }
 
 

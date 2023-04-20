@@ -2,10 +2,15 @@ package com.ticketmaster.events.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * Venue model
+ * JSON return params
+ *
+ * @author divyavenkatesh
+ * @date 20/04/2023
+ */
 @Data
 @NoArgsConstructor
 public class Venue {
@@ -23,6 +28,5 @@ public class Venue {
         this.url = url;
         this.city = city;
         this.id = id;
-
     }
 }

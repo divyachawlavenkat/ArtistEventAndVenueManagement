@@ -1,81 +1,129 @@
 package com.ticketmaster.events.unitTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-import com.ticketmaster.events.controller.ArtistController;
+import java.util.*;
+
 import com.ticketmaster.events.model.Artist;
-import com.ticketmaster.events.model.ArtistResponse;
 import com.ticketmaster.events.model.Event;
-import com.ticketmaster.events.model.Venue;
 import com.ticketmaster.events.service.DataServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 
 class ArtistControllerTest {
 
-    @Autowired
     private DataServiceImpl dataServiceImpl;
 
-    @Autowired
-    private ArtistController artistController;
-
     @BeforeEach
-    void setUp() {
-        dataServiceImpl = mock(DataServiceImpl.class);
-        artistController = mock(ArtistController.class);
+    public void setUp() {
+        dataServiceImpl = new DataServiceImpl();
+    }
+
+    @Test
+    public void testGetEventsForArtistAvailable() throws Exception {
+        //given
+        String inputNumberToCheckPrimes = "24";
+        assertDoesNotThrow(() -> {
+            //when
+            List<Event> response = dataServiceImpl.getEventsForArtist(inputNumberToCheckPrimes);
+
+            //then
+            assertNotNull(response);
+            assertEquals(5, response.size());
+        });
+    }
+
+    @Test
+    public void testGetEventsForArtistUnAvailable() throws Exception {
+        //given
+        String inputNumberToCheckPrimes = "2";
+
+        //when
+        assertDoesNotThrow(() -> {
+            List<Event> response = dataServiceImpl.getEventsForArtist(inputNumberToCheckPrimes);
+
+            //then
+            assertNotNull(response);
+            assertEquals(0, response.size());
+            assertEquals(response, Collections.emptyList());
+        });
+    }
+
+    @Test
+    public void testGetEventsForArtistAvailableTwo() throws Exception {
+        //given
+        String inputNumberToCheckPrimes = "25";
+
+        //when
+        assertDoesNotThrow(() -> {
+            List<Event> response = dataServiceImpl.getEventsForArtist(inputNumberToCheckPrimes);
+
+            //then
+            assertNotNull(response);
+            assertEquals(2, response.size());
+        });
 
     }
 
     @Test
-    void testGetArtistWithValidArtistId() throws Exception {
-        String artistId = "24";
+    public void testGetEventsForArtistAvailableTwentySix() throws Exception {
+        //given
+        String inputNumberToCheckPrimes = "26";
 
-        List<Artist> artists = new ArrayList<>();
-        Artist artist = new Artist();
-        artist.setId("1");
-        artist.setName("John Doe");
-        artists.add(artist);
+        //when
+        assertDoesNotThrow(() -> {
+            List<Event> response = dataServiceImpl.getEventsForArtist(inputNumberToCheckPrimes);
 
-        List<Event> events = new ArrayList<>();
-        Event event1 = new Event();
-        event1.setId("1");
-        event1.setArtists(artists);
-        events.add(event1);
+            //then
+            assertNotNull(response);
+            assertEquals(2, response.size());
+        });
 
-        Venue venue = new Venue();
-        venue.setId("1");
-        venue.setName("Venue 1");
-
-        when(dataServiceImpl.getAllArtists()).thenReturn(artists);
-        when(dataServiceImpl.getAllEvents()).thenReturn(events);
-        when(dataServiceImpl.getAllVenues()).thenReturn(List.of(venue));
-
-        ResponseEntity<ArtistResponse> responseEntity = artistController.getArtist(artistId);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        ArtistResponse artistResponse = responseEntity.getBody();
-        assert artistResponse != null;
-        Optional<Artist> optionalArtist = artistResponse.getArtist();
-        List<Event> eventsByArtistId = artistResponse.getEvents();
-
-        assertTrue(optionalArtist.isPresent());
-        Artist artistResponseData = optionalArtist.get();
-        assertEquals(artist, artistResponseData);
-
-        assertEquals(1, eventsByArtistId.size());
-        Event eventResponseData = eventsByArtistId.get(0);
-        assertEquals(event1, eventResponseData);
     }
+
+
+    @Test
+    public void testGetArtistAvailable() throws Exception {
+        //given
+        String inputNumberToCheckPrimes = "24";
+
+        assertDoesNotThrow(() -> {
+            //when
+           Optional<Artist> response = dataServiceImpl.getArtist(inputNumberToCheckPrimes);
+
+            //then
+            assertNotNull(response);
+        });
+    }
+
+
+    @Test
+    public void testGetAllArtistAvailable() throws Exception {
+
+        assertDoesNotThrow(() -> {
+            //when
+            List<Artist> response = dataServiceImpl.getAllArtists();
+
+            //then
+            assertNotNull(response);
+        });
+    }
+
+
+    @Test
+    public void testGetAllEventsAvailable() throws Exception {
+
+        assertDoesNotThrow(() -> {
+            //when
+            List<Event> response = dataServiceImpl.getAllEvents();
+
+            //then
+            assertNotNull(response);
+        });
+    }
+
+
 
 }

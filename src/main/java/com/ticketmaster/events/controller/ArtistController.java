@@ -20,31 +20,27 @@ public class ArtistController {
     @Autowired
     DataServiceImpl dataServiceImpl;
 
-    // Endpoint to get artist information for a specific artistId
-    // and contain all fields of given artist and all the events the artist will perform at.
+    /**
+     * @GetMapping (" / artists / { artistId } ") specifies that this method will handle GET requests to /artists/{artistId},
+     *  Endpoint to get artist information for a specific artistId
+     *  and contain all fields of given artist and all the events the artist will perform at.
+     * Spring Boot invokes that method and returns the data that is returned by the method as an HTTP response.
+     * @author Divya Venkatesh
+     * @date 21/03/2023
+     * @see Object
+     */
+
     @GetMapping("/artists/{artistId}")
     public ResponseEntity<ArtistResponse> getArtist(@PathVariable String artistId) throws Exception {
         try {
-            // fetch artists data
-            List<Artist> artists = dataServiceImpl.getAllArtists();
-
             // find artist by id
-            Optional<Artist> artist = artists.stream()
-                    .filter(a -> a.getId().equals(artistId))
-                    .findFirst();
-
-            List<Event> eventsByArtistId = new ArrayList<>();
+           Optional<Artist> artist = dataServiceImpl.getArtist(artistId);
+            // get events for the artist
+           List<Event> eventsByArtist = new ArrayList<>();
             if (artist.isPresent()) {
-                // fetch events data
-                List<Event> events = dataServiceImpl.getAllEvents();
-
-                // get events for the artist
-                events.stream()
-                        .filter(event -> event.getArtists().stream()
-                                .anyMatch(art -> art.getId().equals(artistId)))
-                        .forEach(eventsByArtistId::add);
+                eventsByArtist = dataServiceImpl.getEventsForArtist(artistId);
             }
-            return new ResponseEntity<>(new ArtistResponse(artist, eventsByArtistId), HttpStatus.OK);
+            return new ResponseEntity<>(new ArtistResponse(artist, eventsByArtist), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

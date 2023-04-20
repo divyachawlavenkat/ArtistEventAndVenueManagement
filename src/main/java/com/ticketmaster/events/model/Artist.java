@@ -3,11 +3,16 @@ package com.ticketmaster.events.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+/**
+ * Artist model
+ * JSON return params
+ *
+ * @author divyavenkatesh
+ * @date 20/04/2023
+ */
 
 @Data
 @NoArgsConstructor
