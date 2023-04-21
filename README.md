@@ -69,7 +69,8 @@ Used HttpClient to fetch data from artistsEndpoint and convert to List<Artist>
     24 is a path variable {artistId} this end point will return rtist information for a specific artistId. 
     This should contain all fields of given artist and all the events the artist will perform at.
     
-    <img width="1017" alt="Screenshot 2023-04-20 at 11 11 59" src="https://user-images.githubusercontent.com/16776911/233335765-f0587e9b-097d-4a0d-8df7-93a8a08c565a.png">
+   <img width="1017" alt="Screenshot 2023-04-20 at 11 11 59" src="https://user-images.githubusercontent.com/16776911/233516247-fd291a5b-b8e6-4ef5-ad14-d89b92291cb1.png">
+
 
 
 Please find the below sample json response bosy which contain artist information for a specific artistId. 
